@@ -19,59 +19,74 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
 
-header{background:#000;color:#fff;padding:12px;text-align:center;font-weight:600}
+header{
+  background:#000;color:#fff;padding:12px;text-align:center;font-weight:600;
+}
 
 .trust{
   background:#fff;display:flex;gap:10px;justify-content:space-around;
-  padding:8px;border-bottom:1px solid #e5e7eb;font-size:12px
+  padding:8px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#111;
 }
 
 .wrap{max-width:440px;margin:auto;padding:12px 12px 90px}
 
 .card{
-  background:#fff;border-radius:16px;padding:16px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08)
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
-.summary{background:#f8fafc;border-radius:12px;padding:12px;margin-bottom:12px}
+.summary{
+  background:#f8fafc;border-radius:12px;padding:12px;margin-bottom:12px
+}
 .summary h3{margin:0 0 6px;font-size:16px}
 .price{font-size:22px;font-weight:800;color:var(--accent)}
-.orderid{font-size:12px;color:#64748b}
+.orderid{font-size:12px;color:var(--muted)}
 
 .field{margin-bottom:10px}
 .field input{
-  width:100%;padding:13px 14px;border-radius:12px;border:1px solid #d1d5db;font-size:14px
+  width:100%;padding:13px 14px;border-radius:12px;border:1px solid #d1d5db;
+  font-size:14px;
 }
 
 .section-title{font-size:14px;font-weight:600;margin:12px 0 6px}
 
 .paycard{
   border:1px solid #e5e7eb;border-radius:14px;padding:10px;margin-bottom:8px;
-  display:flex;align-items:center;gap:10px
+  display:flex;align-items:center;gap:10px;
+}
+.paycard img{width:44px;height:44px;border-radius:8px}
+.paycard b{font-size:14px}
+.paycard small{display:block;color:var(--muted)}
+
+.trustbox{
+  margin-top:10px;background:#f8fafc;border-radius:12px;padding:10px;
+  font-size:12px;color:#334155
 }
 
-.trustbox{margin-top:10px;background:#f8fafc;border-radius:12px;padding:10px;font-size:12px}
-
+/* Sticky bottom bar */
 .bottom{
   position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e5e7eb;
-  padding:10px;display:flex;gap:10px
+  padding:10px;display:flex;gap:10px;align-items:center;
 }
-
 .bottom .total{flex:1}
+.bottom .total b{font-size:18px}
 .bottom button{
-  flex:1;padding:14px;border:none;border-radius:14px;background:#000;color:#fff;font-size:16px
+  flex:1;padding:14px;border:none;border-radius:14px;background:#000;color:#fff;font-size:16px;
 }
 
+button:disabled{opacity:.6}
+
+/* Loader overlay */
 .overlay{
   position:fixed;inset:0;background:rgba(255,255,255,.9);display:none;
   align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:50
 }
-
 .loader{
   border:4px solid #eee;border-top:4px solid #000;border-radius:50%;
   width:36px;height:36px;animation:spin 1s linear infinite
 }
-
 @keyframes spin{100%{transform:rotate(360deg)}}
 
 footer{text-align:center;font-size:12px;color:#6b7280;padding:12px}
@@ -108,17 +123,25 @@ footer{text-align:center;font-size:12px;color:#6b7280;padding:12px}
 
     <label class="paycard">
       <input type="radio" name="pay" value="UPI" checked>
-      <b>Pay Online (UPI)</b>
+      <div>
+        <b>Pay Online (UPI)</b>
+        <small>Instant confirmation</small>
+      </div>
+      <img src="https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif">
     </label>
 
     <label class="paycard">
       <input type="radio" name="pay" value="COD">
-      <b>Cash on Delivery</b>
+      <div>
+        <b>Cash on Delivery</b>
+        <small>Pay at your doorstep</small>
+      </div>
     </label>
 
     <div class="trustbox">
-      🔐 Secure Checkout<br>
-      📲 WhatsApp support after order
+      🔐 100% Secure Checkout<br>
+      📲 WhatsApp support after order<br>
+      By placing order you agree to return/refund policy.
     </div>
 
   </div>
@@ -131,12 +154,12 @@ footer{text-align:center;font-size:12px;color:#6b7280;padding:12px}
 
 <div class="overlay" id="overlay">
   <div class="loader"></div>
-  <div>Processing…</div>
+  <div style="font-size:14px;color:#334155">Processing… please wait</div>
 </div>
 
-<footer>Rozana Needs</footer>
+<footer>Rozana Needs • Trusted Daily Essentials</footer>
 
-<!-- Firebase -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
@@ -150,44 +173,39 @@ const db=firebase.firestore();
 </script>
 
 <script>
+/* CONFIG */
 const UPI_ID="7381749483@okbizaxis";
 const STORE_NAME="Rozana Needs";
 const TELEGRAM_BOT="8519147037:AAGXDo9ku4iOP6X6F2jQxnME08WwctUjoj0";
 const TELEGRAM_CHAT="5820261983";
 
-const productNameEl=document.getElementById("productName");
-const priceEl=document.getElementById("price");
-const bottomPriceEl=document.getElementById("bottomPrice");
-const orderIdEl=document.getElementById("orderId");
-
-const nameEl=document.getElementById("name");
-const phoneEl=document.getElementById("phone");
-const addressEl=document.getElementById("address");
-const cityEl=document.getElementById("city");
-const stateEl=document.getElementById("state");
-const pincodeEl=document.getElementById("pincode");
-const payBtn=document.getElementById("payBtn");
-const overlay=document.getElementById("overlay");
-
+/* PRODUCT */
 const q=new URLSearchParams(location.search);
 const product=q.get("product")||"Product";
 const price=q.get("price")||"0";
 const orderId="RN"+Date.now().toString().slice(-8);
 
-productNameEl.innerText=product;
+/* ELEMENTS */
+const productName=document.getElementById("productName");
+const priceEl=document.getElementById("price");
+const bottomPriceEl=document.getElementById("bottomPrice");
+const orderIdEl=document.getElementById("orderId");
+const overlay=document.getElementById("overlay");
+const payBtn=document.getElementById("payBtn");
+
+/* DISPLAY */
+productName.innerText=product;
 priceEl.innerText=price;
 bottomPriceEl.innerText=price;
 orderIdEl.innerText=orderId;
 
 function sendTG(m){
- fetch(`https://api.telegram.org/bot${TELEGRAM_BOT}/sendMessage?chat_id=${TELEGRAM_CHAT}&text=${encodeURIComponent(m)}`);
+ fetch(`https://api.telegram.org/bot${TELEGRAM_BOT}/sendMessage?chat_id=${TELEGRAM_CHAT}&text=${encodeURIComponent(m)}`).catch(()=>{});
 }
 
 payBtn.onclick=async()=>{
- if(!nameEl.value||!phoneEl.value||!addressEl.value||!cityEl.value||!stateEl.value||!pincodeEl.value){
-   alert("Please fill all required fields");
-   return;
- }
+ const nameVal=name.value, phoneVal=phone.value, addr=address.value, c=city.value, s=state.value, p=pincode.value;
+ if(!nameVal||!phoneVal||!addr||!c||!s||!p) return alert("Please fill all required fields");
 
  const method=document.querySelector("input[name=pay]:checked").value;
 
@@ -196,16 +214,15 @@ payBtn.onclick=async()=>{
 
  await db.collection("orders").add({
    orderId,product,amount:Number(price),
-   customerName:nameEl.value,phone:phoneEl.value,address:addressEl.value,
-   city:cityEl.value,state:stateEl.value,pincode:pincodeEl.value,
+   customerName:nameVal,phone:phoneVal,address:addr,city:c,state:s,pincode:p,
    paymentMethod:method,status:method==="COD"?"COD_PENDING":"PENDING",
    createdAt:firebase.firestore.FieldValue.serverTimestamp()
  });
 
- sendTG(`🛒 New Order\n${orderId}\n${product}\n₹${price}\n${method}\n${phoneEl.value}`);
+ sendTG(`🛒 New Order\n${orderId}\n${product}\n₹${price}\n${method}\n${phoneVal}`);
 
  if(method==="COD"){
-   location.href=`success.html?orderId=${orderId}&cod=1`;
+   setTimeout(()=>location.href=`success.html?orderId=${orderId}&cod=1`,2500);
    return;
  }
 
@@ -213,6 +230,7 @@ payBtn.onclick=async()=>{
  setTimeout(()=>location.href=`success.html?orderId=${orderId}`,15000);
 };
 </script>
+
 
 </body>
 </html>
