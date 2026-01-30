@@ -33,6 +33,8 @@ h2{margin:10px 0 4px}
 
 <div class="price">₹<span id="price"></span></div>
 
+<div class="info" id="desc"></div>
+
 <div class="info">
 🚚 Delivery in 2–5 days<br>
 🔄 Easy replacement if damaged<br>
@@ -46,45 +48,39 @@ h2{margin:10px 0 4px}
 </div>
 
 <script>
-const SHEET_ID = "1g5iU3kc5iEBhnQNUlEXKlUIh25rVsdoBN7fRQYG0Xh0";
-const pid = new URLSearchParams(location.search).get("id");
+const SHEET_ID="PASTE_YOUR_SHEET_ID";
+const pid=new URLSearchParams(location.search).get("id");
 
-/* ELEMENTS */
-const imgEl = document.getElementById("img");
-const nameEl = document.getElementById("name");
-const priceEl = document.getElementById("price");
-const buyBtn = document.getElementById("buy");
-const loading = document.getElementById("loading");
-const content = document.getElementById("content");
+const imgEl=document.getElementById("img");
+const nameEl=document.getElementById("name");
+const priceEl=document.getElementById("price");
+const descEl=document.getElementById("desc");
+const buyBtn=document.getElementById("buy");
+const loading=document.getElementById("loading");
+const content=document.getElementById("content");
 
 fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`)
 .then(r=>r.text())
 .then(t=>{
-  const j = JSON.parse(t.substring(47).slice(0,-2));
-  const row = j.table.rows[pid-2];
+ const j=JSON.parse(t.substring(47).slice(0,-2));
+ const row=j.table.rows.find(r=>String(r.c[0]?.v)===String(pid));
 
-  if(!row){
-    alert("Product not found");
-    return;
-  }
+ if(!row){ alert("Product not found"); return; }
 
-  const name = row.c[0]?.v || "";
-  const price = row.c[1]?.v || 0;
-  const img = row.c[2]?.v || "";
+ imgEl.src=row.c[3]?.v||"";
+ nameEl.innerText=row.c[1]?.v||"";
+ priceEl.innerText=row.c[2]?.v||0;
+ descEl.innerText=row.c[5]?.v||"";
 
-  imgEl.src = img;
-  nameEl.innerText = name;
-  priceEl.innerText = price;
+ loading.style.display="none";
+ content.style.display="block";
 
-  loading.style.display = "none";
-  content.style.display = "block";
-
-  buyBtn.onclick = () => {
-    location.href = `checkout.html?product=${encodeURIComponent(name)}&price=${price}`;
-  };
+ buyBtn.onclick=()=>{
+  location.href=`checkout.html?product=${encodeURIComponent(nameEl.innerText)}&price=${priceEl.innerText}`;
+ };
 })
 .catch(()=>{
-  loading.innerText = "Failed to load product. Check Sheet ID.";
+ loading.innerText="Failed to load product. Check Sheet ID.";
 });
 </script>
 
