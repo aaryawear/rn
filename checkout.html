@@ -204,7 +204,13 @@ function sendTG(m){
 }
 
 payBtn.onclick=async()=>{
- const nameVal=name.value, phoneVal=phone.value, addr=address.value, c=city.value, s=state.value, p=pincode.value;
+ const nameVal=document.getElementById("name").value.trim();
+const phoneVal=document.getElementById("phone").value.trim();
+const addr=document.getElementById("address").value.trim();
+const c=document.getElementById("city").value.trim();
+const s=document.getElementById("state").value.trim();
+const p=document.getElementById("pincode").value.trim();
+
  if(!nameVal||!phoneVal||!addr||!c||!s||!p) return alert("Please fill all required fields");
 
  const method=document.querySelector("input[name=pay]:checked").value;
