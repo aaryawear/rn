@@ -3,216 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Secure Checkout</title>
+<title>Secure Checkout • Rozana Needs</title>
 
 <style>
-body {
-  margin: 0;
-  background: #f8fafc;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #111827;
-}
-header {
-  background: #000;
-  color: #fff;
-  padding: 12px;
-  text-align: center;
-  font-size: 13px;
-}
-.wrap {
-  max-width: 420px;
-  margin: auto;
-  padding: 16px;
-}
-.card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 22px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.06);
-}
-h1 { font-size: 22px; }
-.order { font-size: 13px; color: #6b7280; }
-.summary {
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 18px;
-}
-.price { font-size: 20px; font-weight: 700; }
-input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
-  margin-bottom: 10px;
-}
-button {
-  width: 100%;
-  padding: 16px;
-  border-radius: 14px;
-  border: none;
-  background: #000;
-  color: #fff;
-  font-weight: 700;
-  font-size: 16px;
-}
-button:disabled { opacity:.6 }
-.status { text-align:center; margin-top:10px }
-.loader {
-  margin:12px auto;
-  border:4px solid #e5e7eb;
-  border-top:4px solid #000;
-  border-radius:50%;
-  width:36px;height:36px;
-  animation:spin 1s linear infinite
-}
-@keyframes spin {100%{transform:rotate(360deg)}}
-footer {
-  text-align:center;
-  font-size:12px;
-  color:#6b7280;
-  padding:16px
-}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f6f9}
+header{background:#000;color:#fff;padding:12px;text-align:center}
+.trust{background:#fff;padding:8px;font-size:12px;display:flex;justify-content:space-around;border-bottom:1px solid #eee}
+.wrap{max-width:420px;margin:auto;padding:12px}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+h2{margin:0 0 6px}
+.summary{background:#f9fafb;border-radius:12px;padding:12px;margin-bottom:12px}
+.price{font-size:18px;font-weight:800;color:#16a34a}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #d1d5db;margin-bottom:8px}
+.payrow{display:flex;align-items:center;gap:10px;margin:10px 0}
+.payrow img{width:48px;height:48px;border-radius:8px}
+button{width:100%;padding:14px;border:none;border-radius:12px;background:#000;color:#fff;font-size:16px}
+button:disabled{opacity:.6}
+.loader{margin:12px auto;border:4px solid #eee;border-top:4px solid #000;border-radius:50%;width:32px;height:32px;animation:spin 1s linear infinite;display:none}
+@keyframes spin{100%{transform:rotate(360deg)}}
+.note{font-size:12px;color:#6b7280;margin-top:10px;text-align:center}
+footer{text-align:center;font-size:12px;color:#6b7280;padding:14px}
 </style>
 </head>
 
 <body>
 
-<header>🔒 Secure Checkout • UPI / Cash on Delivery</header>
+<header>🔒 Secure Checkout — Rozana Needs</header>
+
+<div class="trust">
+  <div>🚚 2–5 Days Delivery</div>
+  <div>💵 COD Available</div>
+  <div>🔄 Easy Returns</div>
+</div>
 
 <div class="wrap">
-<div class="card">
+  <div class="card">
 
-<h1>Checkout</h1>
-<p class="order">Order ID: <b id="orderId"></b></p>
+    <h2>Checkout</h2>
 
-<div class="summary">
-  <h3 id="productName"></h3>
-  <div class="price">₹<span id="priceText"></span></div>
+    <div class="summary">
+      <div id="productName"></div>
+      <div class="price">₹<span id="price"></span></div>
+      <div style="font-size:12px;color:#6b7280">Order ID: <span id="orderId"></span></div>
+    </div>
+
+    <input id="name" placeholder="Full Name *">
+    <input id="phone" placeholder="Mobile Number *">
+    <input id="address" placeholder="House / Street / Area *">
+    <input id="city" placeholder="City *">
+    <input id="state" placeholder="State *">
+    <input id="pincode" placeholder="Pincode *">
+
+    <!-- PAYMENT OPTIONS -->
+    <div class="payrow">
+      <input type="radio" name="pay" value="UPI" checked>
+      <b>Pay Online (UPI)</b>
+      <!-- 🔥 GIF beside Pay Online -->
+      <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWZlNnR2Z2o1Z3l0N3J2d2x0N2t2bG1qOGZxN2l4cGx1dG1qYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o7TKtnuHOHHUjR38Y/giphy.gif">
+    </div>
+
+    <div class="payrow">
+      <input type="radio" name="pay" value="COD">
+      <b>Cash on Delivery</b>
+    </div>
+
+    <button id="payBtn">Place Order</button>
+    <div id="loader" class="loader"></div>
+
+    <div class="note">
+      🔒 100% Secure Checkout • WhatsApp support after order<br>
+      By placing order you agree to our return/refund policy.
+    </div>
+
+  </div>
 </div>
 
-<input id="name" placeholder="Full Name *">
-<input id="phone" type="tel" pattern="[0-9]{10}" placeholder="Mobile Number *">
-<input id="address" placeholder="House / Street / Area *">
-<input id="city" placeholder="City *">
-<input id="state" placeholder="State *">
-<input id="pincode" placeholder="Pincode *">
-
-<!-- PAYMENT METHOD -->
-<div style="margin:12px 0">
-  <label><input type="radio" name="payment" value="UPI" checked> Pay Online (UPI)</label><br>
-  <label><input type="radio" name="payment" value="COD"> Cash on Delivery</label>
-</div>
-
-<button id="payBtn">Pay ₹<span id="payAmount"></span></button>
-
-<div id="status" class="status"></div>
-<div id="loader" class="loader" style="display:none"></div>
-
-</div>
-</div>
-
-<footer>WhatsApp support after order</footer>
-
-<!-- CONFIG -->
-<script>
-const STORE_NAME = "Kunal Store";
-const UPI_ID = "7381749483@okbizaxis";
-const TELEGRAM_BOT = "8519147037:AAGXDo9ku4iOP6X6F2jQxnME08WwctUjoj0";
-const TELEGRAM_CHAT = "5820261983";
-</script>
+<footer>
+  Rozana Needs • Trusted Daily Essentials
+</footer>
 
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script>
 firebase.initializeApp({
-  apiKey: "AIzaSyAcokjcwR2WEiis__c61TuXEzYXhxUlKB8",
-  authDomain: "shop-template-7d574.firebaseapp.com",
-  projectId: "shop-template-7d574"
+  apiKey:"AIzaSyAcokjcwR2WEiis__c61TuXEzYXhxUlKB8",
+  authDomain:"shop-template-7d574.firebaseapp.com",
+  projectId:"shop-template-7d574"
 });
-const db = firebase.firestore();
+const db=firebase.firestore();
 </script>
 
-<!-- LOGIC -->
 <script>
-const params = new URLSearchParams(location.search);
-const productName = params.get("product") || "Product";
-const amount = params.get("price") || "0";
-const orderId = "ORD" + Date.now().toString().slice(-8);
+/* CONFIG */
+const UPI_ID="7381749483@okbizaxis";
+const STORE_NAME="Rozana Needs";
+const TELEGRAM_BOT="8519147037:AAGXDo9ku4iOP6X6F2jQxnME08WwctUjoj0";
+const TELEGRAM_CHAT="5820261983";
 
-document.getElementById("productName").innerText = productName;
-document.getElementById("priceText").innerText = amount;
-document.getElementById("payAmount").innerText = amount;
-document.getElementById("orderId").innerText = orderId;
+/* PRODUCT */
+const q=new URLSearchParams(location.search);
+const product=q.get("product")||"Product";
+const price=q.get("price")||"0";
+const orderId="RN"+Date.now().toString().slice(-8);
 
-const btn = document.getElementById("payBtn");
-const statusEl = document.getElementById("status");
-const loader = document.getElementById("loader");
+productName.innerText=product;
+priceEl= document.getElementById("price");
+priceEl.innerText=price;
+orderIdEl=document.getElementById("orderId");
+orderIdEl.innerText=orderId;
 
-function sendTelegram(msg){
-  fetch(`https://api.telegram.org/bot${TELEGRAM_BOT}/sendMessage?chat_id=${TELEGRAM_CHAT}&text=${encodeURIComponent(msg)}`).catch(()=>{});
+/* TELEGRAM */
+function sendTG(m){
+ fetch(`https://api.telegram.org/bot${TELEGRAM_BOT}/sendMessage?chat_id=${TELEGRAM_CHAT}&text=${encodeURIComponent(m)}`).catch(()=>{});
 }
 
-function upiLink(){
-  return `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(STORE_NAME)}&am=${amount}&cu=INR&tn=${orderId}`;
-}
+payBtn.onclick=async()=>{
+ const name=nameEl=name.value, phoneVal=phone.value, addr=address.value, c=city.value, s=state.value, p=pincode.value;
+ if(!name||!phoneVal||!addr||!c||!s||!p) return alert("Please fill all required fields");
 
-btn.onclick = () => {
+ const method=document.querySelector("input[name=pay]:checked").value;
 
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const address = document.getElementById("address").value.trim();
-  const city = document.getElementById("city").value.trim();
-  const state = document.getElementById("state").value.trim();
-  const pincode = document.getElementById("pincode").value.trim();
+ payBtn.disabled=true;
+ loader.style.display="block";
 
-  if(!name||!phone||!address||!city||!state||!pincode){
-    alert("Please fill all fields");
-    return;
-  }
+ await db.collection("orders").add({
+   orderId,
+   product,
+   amount:Number(price),
+   customerName:name,
+   phone:phoneVal,
+   address:addr,
+   city:c,
+   state:s,
+   pincode:p,
+   paymentMethod:method,
+   status:method==="COD"?"COD_PENDING":"PENDING",
+   createdAt:firebase.firestore.FieldValue.serverTimestamp()
+ });
 
-  const paymentMethod =
-    document.querySelector('input[name="payment"]:checked').value;
+ sendTG(`🛒 New Order\n${orderId}\n${product}\n₹${price}\n${method}\n${phoneVal}`);
 
-  btn.disabled = true;
-  loader.style.display = "block";
+ if(method==="COD"){
+   setTimeout(()=>location.href=`success.html?orderId=${orderId}&cod=1`,2500);
+   return;
+ }
 
-  db.collection("orders").add({
-    orderId,
-    product: productName,
-    amount: Number(amount),
-    customerName: name,
-    phone,
-    address,
-    city,
-    state,
-    pincode,
-    store: STORE_NAME,
-    paymentMethod,
-    status: paymentMethod==="COD" ? "COD_PENDING":"PENDING",
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  });
+ /* Open UPI app */
+ location.href=`upi://pay?pa=${UPI_ID}&pn=${STORE_NAME}&am=${price}&cu=INR&tn=${orderId}`;
 
-  sendTelegram(
-`🛒 NEW ORDER (${STORE_NAME})
-🆔 ${orderId}
-📦 ${productName}
-💰 ₹${amount}
-💳 ${paymentMethod}
-📞 ${phone}`
-  );
-
-  if(paymentMethod==="COD"){
-    statusEl.innerText="Order placed (Cash on Delivery)…";
-    setTimeout(()=>location.href=`success.html?orderId=${orderId}&cod=1`,3000);
-    return;
-  }
-
-  statusEl.innerText="Opening payment app…";
-  location.href = upiLink();
-
-  setTimeout(()=>location.href=`success.html?orderId=${orderId}`,15000);
+ /* Show processing then success */
+ setTimeout(()=>location.href=`success.html?orderId=${orderId}`,15000);
 };
 </script>
 
