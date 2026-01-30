@@ -24,7 +24,6 @@ h3{font-size:14px;margin:8px 0 4px}
 .badge{font-size:11px;color:#6b7280}
 .loader{text-align:center;padding:40px;color:#6b7280}
 footer{background:#fff;padding:16px;font-size:12px;color:#6b7280;text-align:center}
-a{color:#000;text-decoration:none}
 </style>
 </head>
 
@@ -39,7 +38,7 @@ a{color:#000;text-decoration:none}
 </div>
 
 <div class="searchbar">
-  <input id="searchInput" placeholder="Search products">
+  <input id="searchInput" placeholder="Search by name or product code">
   <button onclick="render()">Search</button>
 </div>
 
@@ -53,31 +52,28 @@ a{color:#000;text-decoration:none}
 <div id="loading" class="loader">Loading products…</div>
 
 <footer>
-  <b>Rozana Needs</b><br>
-  Daily-use kitchen & utility products at honest prices.<br><br>
-
-  🔒 100% Secure Checkout<br>
-  📦 2–5 Days Delivery<br>
-  📲 WhatsApp Support After Order<br><br>
-
-  By shopping with us you agree to our Return & Refund Policy.
+<b>Rozana Needs</b><br>
+Daily-use kitchen & utility products at honest prices.<br><br>
+🔒 Secure Checkout • 📦 2–5 Days Delivery • 📲 WhatsApp Support
 </footer>
 
 <script>
-const SHEET_ID="1g5iU3kc5iEBhnQNUlEXKlUIh25rVsdoBN7fRQYG0Xh0";
+const SHEET_ID="PASTE_YOUR_SHEET_ID";
+
 let all=[],cat="All";
 
 fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`)
 .then(r=>r.text())
 .then(t=>{
  const j=JSON.parse(t.substring(47).slice(0,-2));
- j.table.rows.forEach((r,i)=>{
+ j.table.rows.forEach(r=>{
   all.push({
-   id:i+2,
-   name:r.c[0]?.v||"",
-   price:r.c[1]?.v||0,
-   image:r.c[2]?.v||"",
-   category:r.c[3]?.v||""
+   id:r.c[0]?.v||"",
+   name:r.c[1]?.v||"",
+   price:r.c[2]?.v||0,
+   image:r.c[3]?.v||"",
+   category:r.c[4]?.v||"",
+   desc:r.c[5]?.v||""
   });
  });
  loading.style.display="none";
@@ -94,14 +90,17 @@ function setCat(c,b){
 function render(){
  products.innerHTML="";
  const q=searchInput.value.toLowerCase();
+
  all.forEach(p=>{
   if(cat!=="All"&&p.category!==cat)return;
-  if(q&&!p.name.toLowerCase().includes(q))return;
+  if(q && !(p.name.toLowerCase().includes(q) || String(p.id).includes(q))) return;
+
   products.innerHTML+=`
 <div class="card">
 <img src="${p.image}">
 <h3>${p.name}</h3>
-<div class="badge">⭐ Rozana Needs Verified Seller</div>
+<div class="badge">${p.desc.substring(0,40)}...</div>
+<div class="badge">Code: ${p.id} • Rozana Needs Verified</div>
 <div class="price">₹${p.price}</div>
 <button class="buy" onclick="location.href='product.html?id=${p.id}'">View Product</button>
 </div>`;
